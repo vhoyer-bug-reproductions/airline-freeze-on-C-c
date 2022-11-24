@@ -1,3 +1,6 @@
+dependencies = \
+	'vim-airline/vim-airline'
+
 # this is freezing
 with-nvim: dependencies
 	nvim --clean -u vimrc
@@ -7,8 +10,12 @@ with-vim: dependencies
 	vim --clean -u vimrc
 
 dependencies:
-	if [ -d "pack/test/start/vim-airline" ]; then exit 0; fi; \
-	git clone https://github.com/vim-airline/vim-airline pack/test/start/vim-airline
+	for repo in $(dependencies); do \
+		name="$${repo##*\/}"; \
+		if [ ! -d "pack/test/start/$$name" ]; then \
+			git clone https://github.com/$$repo pack/test/start/$$name; \
+		fi; \
+	done;
 
 clean:
 	rm -rf pack/
